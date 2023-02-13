@@ -1,0 +1,459 @@
+<!DOCTYPE html><html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Time</title>
+</head>
+<style>
+    
+    label{
+        width: 70%;
+    }
+    
+    .input{
+        width: 100%;
+        cursor: pointer;
+    }
+
+    .input1{
+        width: 100%;
+        cursor: pointer;
+    }
+
+    .inputNumber{
+        width: 100%;
+        cursor: pointer;
+    }
+
+    input:disabled {
+        background-color: lightgray;
+        color: black;
+        border: 2px solid gray;
+        cursor: not-allowed;
+    }
+
+    .submit:disabled:hover {
+        background-color: lightgray;
+        color: black;
+    }
+
+    .submit{
+        width: 100%; 
+        margin-top: 20px; 
+        cursor: pointer; 
+        padding: 14px 20px; 
+        font-size: 15px; 
+        background-color: #1C942A; 
+        color: white; 
+        border: 1px solid black; 
+        border-radius: 2px;
+    }
+
+    .submit:hover{
+        background-color: #187C24;
+    }
+</style>
+<body style='font-family: Arial, Helvetica, sans-serif; '>
+        <div style='margin: 0 auto; text-align: center;'>
+            <h1 style='font-size: 35px; font-family: arial; margin-top: 50px;'>Manual settings</h1>
+            <div style='margin-top: 50px;display: inline-block; margin: auto 0; text-align: left; margin-bottom: 40px;'>
+                <div style='color: red; text-align: center; font-size: 12px;'>
+                    <p>*The maximum speed for the motor should not be higher than 1000</p>
+                    <p>*The acceleration for the motor should not be higher than 1000</p>
+                    <p>*The speed for the motor should not be higher than 1000</p>
+                    <br/>
+                    <p>*Exceeding to the said capacity will make the motor over heat</p>
+                </div>
+                <form method='post' id='form'>
+                    <div style='display: flex; margin-bottom: 5px; margin-top: 20px;'>
+                        <label style='margin: auto 0;' >Time</label>
+                        <input class='input1' name='time' id='time' type='time' style='padding: 13px 40px; border: 1px solid black; border-radius: 2px; margin-right: 20px;' />
+                    </div>
+                    <div style='display: flex;margin-bottom: 5px;'>
+                        <label style='margin: auto 0;'>Max speed</label>
+                        <input disabled name='maxSpeed' id='maxSpeed' class='inputNumber' type='number' style='padding: 13px 20px; border: 1px solid black; border-radius: 2px;' /><br/>
+                        <input type='checkbox' id='maxSpeedCheckbox'  style='cursor: pointer;padding: 10px 10px; border: 1px solid black; border-radius: 2px; width: 7%;'/>
+                    </div>
+                    <div style='display: flex;margin-bottom: 5px;'>
+                        <label style='margin: auto 0;'>Acceleration</label>
+                        <input disabled name='acceleration' id='acceleration' class='inputNumber' type='number'  style='padding: 13px 20px; border: 1px solid black; border-radius: 2px;' /><br/>
+                        <input type='checkbox' id='accelerationCheckbox' style='cursor: pointer;padding: 10px 10px; border: 1px solid black; border-radius: 2px; width: 7%;'/>
+                    </div>
+                    <div style='display: flex;margin-bottom: 5px;'>
+                        <label style='margin: auto 0;'>Speed</label>
+                        <input disabled name='speed' id='speed' class='inputNumber' type='number' style='padding: 13px 20px; border: 1px solid black; border-radius: 2px;' /><br/>
+                        <input type='checkbox' id='speedCheckbox'  style='cursor: pointer;padding: 10px 10px; border: 1px solid black; border-radius: 2px; width: 7%;'/>
+                    </div>
+                    <div style='display: flex;margin-bottom: 5px;'>
+                        <label style='margin: auto 0;'>Time open</label>
+                        <input disabled name='timeOpen' id='timeOpen' class='input' type='time' style='cursor: pointer; padding: 13px 20px; border: 1px solid black; border-radius: 2px;' /><br/>
+                        <input type='checkbox'id='timeOpenCheckbox'  style='cursor: pointer;padding: 10px 10px; border: 1px solid black; border-radius: 2px; width: 7%;'/>
+                    </div>
+                    <div style='display: flex;margin-bottom: 5px;'>
+                        <label style='margin: auto 0;'>Time Close</label>
+                        <input disabled name='timeClose' id='timeClose' class='input' type='time' style='cursor: pointer; padding: 13px 20px; border: 1px solid black; border-radius: 2px;' /><br/>
+                        <input type='checkbox' id='timeCloseCheckbox' style=' cursor: pointer;padding: 10px 10px; border: 1px solid black; border-radius: 2px; width: 7%;'/>
+                    </div>
+                    <input type='submit' name='submit' id='submit' class='submit' value='Update' />
+                </form>
+            </div>
+        </div>
+</body>
+<script>
+    document.getElementById('form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        alert('Updated successfully!');
+        location.reload();
+    });
+
+    const checkbox = document.getElementById('timeCheckbox');const checkbox1 = document.getElementById('maxSpeedCheckbox');const checkbox2 = document.getElementById('accelerationCheckbox');const checkbox3 = document.getElementById('speedCheckbox');const checkbox4 = document.getElementById('timeOpenCheckbox');const checkbox5 = document.getElementById('timeCloseCheckbox');
+
+    const input = document.getElementById('time');const input1 = document.getElementById('maxSpeed');const input2 = document.getElementById('acceleration');const input3 = document.getElementById('speed');const input4 = document.getElementById('timeOpen');const input5 = document.getElementById('timeClose');
+
+    const submitButton = document.getElementById('submit');
+
+    window.onload = function() {
+        if (input.value === '') {
+            submitButton.disabled = true;
+        }
+    }
+
+    input.oninput = function() {
+        var countDisable = 0;
+
+        if (input.value.length > 0) {
+            if(input1.value.length <= 0 && checkbox1.checked){
+                countDisable = 1;
+            }
+
+            else if(input2.value.length <= 0 && checkbox2.checked){
+                countDisable = 1;
+            }
+
+            else if(input3.value.length <= 0 && checkbox3.checked){
+                countDisable = 1;
+            }
+
+            else if(input4.value.length <= 0 && checkbox4.checked){
+                countDisable = 1;
+            }
+
+            else if(input5.value.length <= 0 && checkbox5.checked){
+                countDisable = 1;
+            }
+
+            if(countDisable > 0){
+                submitButton.disabled = true;
+            }
+
+            else if(countDisable == 0){
+                submitButton.disabled = false;
+            }
+        } 
+
+        else {
+            submitButton.disabled = true;
+        }
+    };
+
+    input1.oninput = function() {
+            var countDisable = 0;
+
+            if (input1.value.length > 0 && checkbox1.checked && input.value.length > 0) {
+                if(input2.value.length <= 0 && checkbox2.checked){
+                    countDisable = 1;
+                }
+
+                else if(input3.value.length <= 0 && checkbox3.checked){
+                    countDisable = 1;
+                }
+
+                else if(input4.value.length <= 0 && checkbox4.checked){
+                    countDisable = 1;
+                }
+
+                else if(input5.value.length <= 0 && checkbox5.checked){
+                    countDisable = 1;
+                }
+
+                if(countDisable > 0){
+                    submitButton.disabled = true;
+                }
+
+                else if(countDisable == 0){
+                    submitButton.disabled = false;
+                }
+            } 
+            
+            else {
+                submitButton.disabled = true;
+            }
+    };
+
+    input2.oninput = function() {
+        var countDisable = 0;
+            if (input2.value.length > 0 && checkbox2.checked && input.value.length > 0) {
+                if(input1.value.length <= 0 && checkbox1.checked){
+                    countDisable = 1;
+                }
+
+                else if(input3.value.length <= 0 && checkbox3.checked){
+                    countDisable = 1;
+                }
+
+                else if(input4.value.length <= 0 && checkbox4.checked){
+                    countDisable = 1;
+                }
+
+                else if(input5.value.length <= 0 && checkbox5.checked){
+                    countDisable = 1;
+                }
+
+                if(countDisable > 0){
+                    submitButton.disabled = true;
+                }
+
+                else if(countDisable == 0){
+                    submitButton.disabled = false;
+                }
+            } 
+            
+            else {
+                submitButton.disabled = true;
+            }
+    };
+
+    input3.oninput = function() {
+        var countDisable = 0;
+            if (input3.value.length > 0 && checkbox3.checked && input.value.length > 0) {
+                if(input2.value.length <= 0 && checkbox2.checked){
+                    countDisable = 1;
+                }
+
+                else if(input3.value.length <= 0 && checkbox3.checked){
+                    countDisable = 1;
+                }
+
+                else if(input4.value.length <= 0 && checkbox4.checked){
+                    countDisable = 1;
+                }
+
+                else if(input5.value.length <= 0 && checkbox5.checked){
+                    countDisable = 1;
+                }
+
+                if(countDisable > 0){
+                    submitButton.disabled = true;
+                }
+
+                else if(countDisable == 0){
+                    submitButton.disabled = false;
+                }
+            } 
+            
+            else {
+                submitButton.disabled = true;
+            }
+    };
+
+    input4.oninput = function() {
+        var countDisable = 0;
+            if (input4.value.length > 0 && checkbox4.checked && input.value.length > 0) {
+                if(input1.value.length <= 0 && checkbox1.checked){
+                    countDisable = 1;
+                }
+
+                else if(input2.value.length <= 0 && checkbox2.checked){
+                    countDisable = 1;
+                }
+
+                else if(input3.value.length <= 0 && checkbox3.checked){
+                    countDisable = 1;
+                }
+
+                else if(input5.value.length <= 0 && checkbox5.checked){
+                    countDisable = 1;
+                }
+
+                if(countDisable > 0){
+                    submitButton.disabled = true;
+                }
+
+                else if(countDisable == 0){
+                    submitButton.disabled = false;
+                }
+            } 
+            
+            else {
+                submitButton.disabled = true;
+            }
+    };
+
+    input5.oninput = function() {
+        var countDisable = 0;
+            if (input5.value.length > 0 && checkbox5.checked && input.value.length > 0) {
+                if(input1.value.length <= 0 && checkbox1.checked){
+                    countDisable = 1;
+                }
+
+                else if(input2.value.length <= 0 && checkbox2.checked){
+                    countDisable = 1;
+                }
+
+                else if(input3.value.length <= 0 && checkbox3.checked){
+                    countDisable = 1;
+                }
+
+                else if(input4.value.length <= 0 && checkbox4.checked){
+                    countDisable = 1;
+                }
+
+                if(countDisable > 0){
+                    submitButton.disabled = true;
+                }
+
+                else if(countDisable == 0){
+                    submitButton.disabled = false;
+                }
+            } 
+            
+            else {
+                submitButton.disabled = true;
+            }
+    };
+    
+    checkbox1.addEventListener('change', function () {
+        if (checkbox1.checked) {
+            input1.disabled = false;
+            if(input.value.length > 0 && input1.value.length > 0 && input2.value.length > 0 && input3.value.length > 0 && input4.value.length > 0 && input5.value.length > 0){
+                submitButton.disabled = false;
+            }
+
+            else {
+                submitButton.disabled = true;
+            }
+        } 
+        
+        else {
+            if(input.value.length > 0){
+                submitButton.disabled = false;
+            }
+            
+            else{
+                submitButton.disabled = true;
+            }
+
+            input1.value = '';
+            input1.disabled = true;
+        }
+    });
+
+    checkbox2.addEventListener('change', function () {
+        if (checkbox2.checked) {
+            input2.disabled = false;
+            if(input.value.length > 0 && input1.value.length > 0 && input2.value.length > 0 && input3.value.length > 0 && input4.value.length > 0 && input5.value.length > 0){
+                submitButton.disabled = false;
+            }
+
+            else {
+                submitButton.disabled = true;
+            }
+        } 
+        
+        else {
+            if(input.value.length > 0){
+                submitButton.disabled = false;
+            }
+            
+            else{
+                submitButton.disabled = true;
+            }
+
+            input2.value = '';
+            input2.disabled = true;
+        }
+    });
+
+    checkbox3.addEventListener('change', function () {
+        if (checkbox3.checked) {
+            input3.disabled = false;
+            if(input.value.length > 0 && input1.value.length > 0 && input2.value.length > 0 && input3.value.length > 0 && input4.value.length > 0 && input5.value.length > 0){
+                submitButton.disabled = false;
+            }
+
+            else {
+                submitButton.disabled = true;
+            }
+        } 
+        
+        else {
+            if(input.value.length > 0){
+                submitButton.disabled = false;
+            }
+            
+            else{
+                submitButton.disabled = true;
+            }
+            input3.value = '';
+            input3.disabled = true;
+        }
+    });
+
+    checkbox4.addEventListener('change', function () {
+        if (checkbox4.checked) {
+            input4.disabled = false;
+            if(input.value.length > 0 && input1.value.length > 0 && input2.value.length > 0 && input3.value.length > 0 && input4.value.length > 0 && input5.value.length > 0){
+                submitButton.disabled = false;
+            }
+
+            else {
+                submitButton.disabled = true;
+            }
+        } 
+        
+        else {
+            check4 = false;
+
+            if(input.value.length > 0){
+                submitButton.disabled = false;
+            }
+
+            else{
+                submitButton.disabled = true;
+            }
+            
+            input4.value = '';
+            input4.disabled = true;
+        }
+    });
+
+    checkbox5.addEventListener('change', function () {
+        if (checkbox5.checked) {
+            input5.disabled = false;
+            if(input.value.length > 0 && input1.value.length > 0 && input2.value.length > 0 && input3.value.length > 0 && input4.value.length > 0 && input5.value.length > 0){
+                submitButton.disabled = false;
+            }
+
+            else {
+                submitButton.disabled = true;
+            }
+        } 
+        
+        else {
+            check5 = false;
+
+            if(input.value.length > 0){
+                submitButton.disabled = false;
+            }
+            
+            else{
+                submitButton.disabled = true;
+            }
+            
+            input5.value = '';
+            input5.disabled = true;
+        }
+    });
+
+</script>
+</html>
