@@ -13,14 +13,10 @@ const int stepsPerRevolution = 200;  // change this value to match the number of
  
 AccelStepper stepper(FULLSTEP, motorPin1, motorPin3, motorPin2, motorPin4);
 
-const int buttonPinManual = 7;
-int buttonStateManual = 0;
-const int buttonPinOPen = 2;
-int buttonStateOpen = 0;
-const int buttonPinClose = 3;
-int buttonStateClose = 0;
-const int buttonPinAutomatic = 4;
-int buttonStateAutomatic = 0;
+const int buttonPin = 7;
+int buttonState = 0;
+const int buttonPin1 = 4;
+int buttonState1 = 0;
 
 const int ledPinAutomaticSignal =  6;
 const int ledPinManualSignal =  5;
@@ -35,9 +31,6 @@ int maxSpeedValue = 50;
 int accelerationValue = 50;
 int speedValue = 50;
 
-bool automatic = true;
-bool manual = false;
-
 void setup() {
   Serial.begin(9600);
   
@@ -45,11 +38,9 @@ void setup() {
   stepper.setAcceleration(accelerationValue);
   stepper.setSpeed(speedValue);
 
-  pinMode(buttonPinManual, INPUT);
-  pinMode(buttonPinOPen, INPUT);
-  pinMode(buttonPinClose, INPUT);
-  pinMode(buttonPinAutomatic, INPUT);
-  
+  pinMode(buttonPin, INPUT);
+  pinMode(buttonPin1, INPUT);
+
   pinMode(ledPinAutomaticSignal, OUTPUT);
   pinMode(ledPinManualSignal, OUTPUT);
   pinMode(ledPinOpenSignal, OUTPUT);
@@ -62,72 +53,43 @@ void setup() {
 }
 
 void loop() {
-  buttonStateManual = digitalRead(buttonPinManual); // for manual
-  buttonStateOpen = digitalRead(buttonPinOPen); // manual open
-  buttonStateClose = digitalRead(buttonPinClose); // manual close
-  buttonStateAutomatic = digitalRead(buttonPinAutomatic); // automatic
+  buttonState = digitalRead(buttonPin);
+  buttonState1 = digitalRead(buttonPin1);
   
-  if(buttonStateManual == HIGH) {
-        automatic = false;
-        manual = true;
-        digitalWrite(ledPinAutomaticSignal, LOW);
-        digitalWrite(ledPinManualSignal, HIGH);
-  }
-
-  //Open
-  if (buttonStateOpen == HIGH && manual == true) {
+  if(buttonState == HIGH) {
+      digitalWrite(ledPinAutomaticSignal, LOW);
+      digitalWrite(ledPinManualSignal, HIGH);
+      buttonAutomatic = false;
+      
       int steps = 100;
-      digitalWrite(ledPinOpenSignal, HIGH);
       for(;;){
-          buttonStateOpen = digitalRead(buttonPinOPen);
+          buttonState = digitalRead(buttonPin);
           stepper.moveTo(steps);
           stepper.run();
           steps++;
     
-          if(buttonStateOpen == LOW){
+          if(buttonState == LOW){
              stepper.stop();
-             digitalWrite(ledPinOpenSignal, LOW);
              break;
           }
-      } 
+      }
   }
 
-  //Close
-  if (buttonStateClose == HIGH && manual == true) {
-      int steps = -100;
-      digitalWrite(ledPinCloseSignal, HIGH);
-      for(;;){
-          buttonStateClose = digitalRead(buttonPinClose);
-          stepper.moveTo(steps);
-          stepper.run();
-          steps--;
-    
-          if(buttonStateClose == LOW){
-             stepper.stop();
-             digitalWrite(ledPinCloseSignal, LOW);
-             break;
-          }
-      } 
-  }
-
-  if (buttonStateAutomatic == HIGH) {
-      manual = false;
-      automatic = true;
-      
+  if (buttonState1 == HIGH) {
       digitalWrite(ledPinAutomaticSignal, HIGH);
       digitalWrite(ledPinManualSignal, LOW);
+      buttonAutomatic = true;
   }
   
-  
-  if (Serial.available()>0 && automatic == true) {
+  else if (Serial.available()>0 && buttonAutomatic == true) {
       message = Serial.readStringUntil('%'); 
       
       if(message == "Open"){
           digitalWrite(ledPinOpenSignal, HIGH);
           for(;;){
-              buttonStateManual = digitalRead(buttonPinManual);
+              buttonState = digitalRead(buttonPin);
         
-              if(buttonStateManual == HIGH) {
+              if(buttonState == HIGH) {
                   stepper.stop();
                   break;
               }
@@ -145,9 +107,9 @@ void loop() {
       else if(message == "Close"){
           digitalWrite(ledPinCloseSignal, HIGH);
           for(;;){
-              buttonStateManual = digitalRead(buttonPinManual);
+              buttonState = digitalRead(buttonPin);
         
-              if(buttonStateManual == HIGH) {
+              if(buttonState == HIGH) {
                   stepper.stop();
                   break;
               }

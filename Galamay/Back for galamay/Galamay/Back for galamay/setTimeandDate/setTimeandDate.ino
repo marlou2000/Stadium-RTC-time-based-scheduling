@@ -7,15 +7,29 @@ const char *password = "password";
 
 ESP8266WebServer server(80);
 
+String timeValue = "";
+String timeValueOpen = "";
+String timeValueClose = "";
+
 void handleRoot() {
   if (server.hasArg("submit")) {
     timeValue = server.arg("time");
+    timeValueOpen = server.arg("timeOpen");
+    timeValueClose = server.arg("timeClose");
     
     if(timeValue == ""){
       timeValue = "0:0";
     }
 
-    Serial1.println(timeValue);
+    if(timeValueOpen == ""){
+      timeValueOpen = "0:0";
+    }
+
+    if(timeValueClose == ""){
+      timeValueClose = "0:0";
+    }
+
+    Serial1.println(timeValue + "," + timeValueOpen +"," + timeValueClose);
     
     server.send(200, "text/html", "<!DOCTYPE html><html lang='en'>"
     "<head>"

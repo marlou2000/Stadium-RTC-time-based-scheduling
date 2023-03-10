@@ -12,6 +12,14 @@ const int ledPinUpdateSignal =  9;
 
 String updateValue;
 
+int openHour = 6;
+int openMinute = 0;
+int openMinute1 = openMinute + 1;
+
+int closeHour = 18;
+int closeMinute = 0;
+int closeMinute1 = closeMinute + 1;
+
 void setup()
 {
     Serial.begin(9600);
@@ -46,7 +54,29 @@ void loop()
         int minuteIndex = removeColon.indexOf(',');
         String minuteString = removeColon.substring(0, minuteIndex);
         int minuteInt = minuteString.toInt();
-        
+
+        String minuteRemove = removeWord(removeColon, minuteString);
+        String removeComma1 = minuteRemove.substring(1);
+        int openHourIndex = removeComma1.indexOf(':');
+        String openHourString = removeComma1.substring(0, openHourIndex);
+        int openHourInt = openHourString.toInt();
+
+        String openHourRemove = removeWord(removeComma1, openHourString);
+        String removeColon1 = openHourRemove.substring(1);
+        int openMinuteIndex = removeColon1.indexOf(',');
+        String openMinuteString = removeColon1.substring(0, openMinuteIndex);
+        int openMinuteInt = openMinuteString.toInt();
+
+        String openMinuteRemove = removeWord(removeColon1, openMinuteString);
+        String removeComma2 = openMinuteRemove.substring(1);
+        int closeHourIndex = removeComma2.indexOf(':');
+        String closeHourString = removeComma2.substring(0, closeHourIndex);
+        int closeHourInt = closeHourString.toInt();
+
+        String closeHourRemove = removeWord(removeComma2, closeHourString);
+        String removeColon2 = closeHourRemove.substring(1);
+        int closeMinuteInt = removeColon2.toInt();
+
         digitalWrite(ledPinUpdateSignal, HIGH);
         lcd.clear();
         lcd.setCursor(0,0);
@@ -59,6 +89,18 @@ void loop()
           rtc.adjust(DateTime(now.hour(), now.minute(), now.second(), hourSetInt, minuteInt, 2));
           DateTime now = rtc.now();
         }
+
+        if(openHourInt != 0){
+          openHour = openHourInt;
+          openMinute = openMinuteInt;
+          openMinute1 = openMinuteInt + 1;
+        }
+
+        if(closeHourInt != 0){
+          closeHour = closeHourInt;
+          closeMinute = closeMinuteInt;
+          closeMinute1 = closeMinuteInt + 1;
+        }  
     }
     
     int hourNow = now.hour();
@@ -69,47 +111,13 @@ void loop()
     lcd.print("Time now");
     lcd.setCursor(0,1);
     lcd.print(String(hourNow) + ":" + String(minutesNow) + ":" + String(secondsNow)); 
-
-    int hourIncrement = 6;
-    
-    for(int loopTime = 0; loopTime < 26; loopTime++){
-
-        if(loopTime >= 0 && loopTime <= 12){
-            if(hourNow >= hourIncrement && minutesNow <= 0){
-                Serial.println("Open%");
-                break;
-            }
-
-            else{
-                hourIncrement++;
-            }
-        }
-
-        if(loopTime >= 13 && loopTime <= 26){
-            if(loopTime >= 19){
-                hourNow = 0;
-
-                if(hourNow >= hourIncrement && minutesNow <= 0){
-                    Serial.println("Close%");
-                    break;
-                }
-    
-                else{
-                    hourIncrement++;
-                }
-            }
-
-            else{
-                if(hourNow >= hourIncrement && minutesNow <= 0){
-                    Serial.println("Close%");
-                    break;
-                }
-    
-                else{
-                    hourIncrement++;
-                }
-            } 
-        }
+  
+    if((hourNow >= openHour && minutesNow >= openMinute) && minutesNow < openMinute1){
+       Serial.println("Open%");
+    }
+  
+    if((hourNow >= closeHour && minutesNow >= closeMinute) && minutesNow < closeMinute1){
+       Serial.println("Close%");
     }
 }
 
