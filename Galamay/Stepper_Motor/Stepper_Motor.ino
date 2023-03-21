@@ -31,9 +31,9 @@ bool buttonAutomatic = true;
 
 String message;
 
-int maxSpeedValue = 50;
-int accelerationValue = 50;
-int speedValue = 50;
+int maxSpeedValue = 1000;
+int accelerationValue = 200;
+int speedValue = 200;
 
 bool automatic = true;
 bool manual = false;
@@ -68,6 +68,7 @@ void loop() {
   buttonStateAutomatic = digitalRead(buttonPinAutomatic); // automatic
   
   if(buttonStateManual == HIGH) {
+        Serial.println("Manual Pressed");
         automatic = false;
         manual = true;
         digitalWrite(ledPinAutomaticSignal, LOW);
@@ -79,6 +80,8 @@ void loop() {
       int steps = 100;
       digitalWrite(ledPinOpenSignal, HIGH);
       for(;;){
+          Serial.println("Opening");
+          
           buttonStateOpen = digitalRead(buttonPinOPen);
           stepper.moveTo(steps);
           stepper.run();
@@ -97,6 +100,8 @@ void loop() {
       int steps = -100;
       digitalWrite(ledPinCloseSignal, HIGH);
       for(;;){
+          Serial.println("Closing");
+          
           buttonStateClose = digitalRead(buttonPinClose);
           stepper.moveTo(steps);
           stepper.run();
@@ -111,6 +116,8 @@ void loop() {
   }
 
   if (buttonStateAutomatic == HIGH) {
+      Serial.println("Automatic Pressed");
+      
       manual = false;
       automatic = true;
       
@@ -122,12 +129,15 @@ void loop() {
   if (Serial.available()>0 && automatic == true) {
       message = Serial.readStringUntil('%'); 
       
-      if(message == "Open"){
+      if(message == "2"){
           digitalWrite(ledPinOpenSignal, HIGH);
           for(;;){
+              Serial.println("Opening");
+              
               buttonStateManual = digitalRead(buttonPinManual);
         
               if(buttonStateManual == HIGH) {
+                  Serial.println("Clicked Manual");
                   stepper.stop();
                   break;
               }
@@ -136,18 +146,24 @@ void loop() {
               stepper.run();
               
               if (!stepper.distanceToGo()) {
+                stepper.setCurrentPosition(0); 
+                Serial.println("Finished Opened");
                 digitalWrite(ledPinOpenSignal, LOW);
                 break;
               } 
           }
       }
 
-      else if(message == "Close"){
+      else if(message == "3"){
+          
           digitalWrite(ledPinCloseSignal, HIGH);
           for(;;){
+              Serial.println("Closing");
+              
               buttonStateManual = digitalRead(buttonPinManual);
         
               if(buttonStateManual == HIGH) {
+                  Serial.println("Clicked Manual");
                   stepper.stop();
                   break;
               }
@@ -156,6 +172,8 @@ void loop() {
               stepper.run();
               
               if (!stepper.distanceToGo()) {
+                stepper.setCurrentPosition(0); 
+                Serial.println("Finished Closed");
                 digitalWrite(ledPinCloseSignal, LOW  );
                 break;
               } 
